@@ -20,9 +20,18 @@ publishing {
             }
         }
     }
+
     repositories {
         maven {
             url = uri("file://${System.getProperty("user.home")}/.m2/repository")
+        }
+        maven {
+            name = "github"
+            url = uri("https://maven.pkg.github.com/canvasgamingltd/canvas")
+            credentials {
+                username = System.getenv("GITHUB_ACTOR")
+                password = System.getenv("GITHUB_TOKEN")
+            }
         }
     }
 }
@@ -30,6 +39,15 @@ publishing {
 repositories {
     mavenCentral()
     maven("https://repo.papermc.io/repository/maven-public/") { name = "papermc-repo" }
+
+    maven {
+        name = "github"
+        url = uri("https://maven.pkg.github.com/canvasgamingltd/canvas")
+        credentials {
+            username = System.getenv("GITHUB_ACTOR")
+            password = System.getenv("GITHUB_TOKEN")
+        }
+    }
 }
 
 dependencies {
