@@ -27,7 +27,7 @@ publishing {
         }
         maven {
             name = "github"
-            url = uri("https://maven.pkg.github.com/canvasgamingltd/canvas")
+            url = uri("https://maven.pkg.github.com/canvasgamingltd/livewire")
             credentials {
                 username = System.getenv("GITHUB_ACTOR")
                 password = System.getenv("GITHUB_TOKEN")
@@ -42,7 +42,7 @@ repositories {
 
     maven {
         name = "github"
-        url = uri("https://maven.pkg.github.com/canvasgamingltd/canvas")
+        url = uri("https://maven.pkg.github.com/canvasgamingltd/livewire")
         credentials {
             username = System.getenv("GITHUB_ACTOR")
             password = System.getenv("GITHUB_TOKEN")
