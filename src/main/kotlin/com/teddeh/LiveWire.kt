@@ -1,5 +1,8 @@
 package com.teddeh
 
+import com.teddeh.api.PluginLoadEvent
+import com.teddeh.api.PluginReloadEvent
+import com.teddeh.api.PluginUnloadEvent
 import org.bukkit.Bukkit
 import org.bukkit.plugin.java.JavaPlugin
 import org.bukkit.scheduler.BukkitTask
@@ -104,11 +107,20 @@ class LiveWire : JavaPlugin() {
                         server.scheduler.runTask(this, Runnable {
                             var output: Path? = null
 
+                            // Check if the unload event is cancelled
+                            plugin?.let {
+                                PluginUnloadEvent(it).callEvent()
+                            }?.takeUnless { it }?.let {
+                                Files.deleteIfExists(newPluginJar.toPath())
+                                println("PluginUnloadEvent for $name was cancelled, aborting hot-reload.")
+                                return@Runnable
+                            }
+
                             if (!ignored) {
                                 // If the plugin currently exists, destroy it!
                                 if (plugin != null) disablePlugin(plugin)
 
-                                // Delete the plugin jar in the plugins directory.
+                                // Delete the plugin jar in the plugins' directory.
                                 if (oldPluginJar != null) {
                                     Files.deleteIfExists(oldPluginJar.toPath())
                                 }
@@ -124,7 +136,18 @@ class LiveWire : JavaPlugin() {
                             // Delete the plugin from livewire directory
                             Files.deleteIfExists(newPluginJar.toPath())
 
+                            // If not ignored, fire the load & reload events
                             if (!ignored) {
+                                var result = PluginLoadEvent(name).callEvent()
+                                plugin?.let { result = result && PluginReloadEvent(name).callEvent() }
+
+                                // If either event was cancelled, delete the copied plugin jar.
+                                if (!result) {
+                                    output?.let { Files.deleteIfExists(it) }
+                                    println("PluginLoadEvent or PluginReloadEvent for $name was cancelled, aborting hot-reload.")
+                                    return@Runnable
+                                }
+
                                 // Load the plugin
                                 enablePlugin(output?.toFile()?.absolutePath ?: return@Runnable)
 
