@@ -39,15 +39,6 @@ publishing {
 repositories {
     mavenCentral()
     maven("https://repo.papermc.io/repository/maven-public/") { name = "papermc-repo" }
-
-    maven {
-        name = "github"
-        url = uri("https://maven.pkg.github.com/canvasgamingltd/livewire")
-        credentials {
-            username = System.getenv("GITHUB_ACTOR")
-            password = System.getenv("GITHUB_TOKEN")
-        }
-    }
 }
 
 dependencies {
