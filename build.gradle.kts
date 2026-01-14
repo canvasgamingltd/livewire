@@ -8,6 +8,11 @@ plugins {
 group = "com.teddeh"
 version = "1.0.2"
 
+val sources by tasks.registering(Jar::class) {
+    archiveClassifier.set("sources")
+    from(sourceSets.main.get().allSource)
+}
+
 publishing {
     publications {
         create<MavenPublication>("mavenJava") {
@@ -18,20 +23,13 @@ publishing {
             artifact(tasks.shadowJar) {
                 classifier = null
             }
+            artifact(sources)
         }
     }
 
     repositories {
         maven {
             url = uri("file://${System.getProperty("user.home")}/.m2/repository")
-        }
-        maven {
-            name = "github"
-            url = uri("https://maven.pkg.github.com/canvasgamingltd/livewire")
-            credentials {
-                username = System.getenv("GITHUB_ACTOR")
-                password = System.getenv("GITHUB_TOKEN")
-            }
         }
     }
 }
