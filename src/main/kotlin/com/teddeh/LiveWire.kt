@@ -138,7 +138,8 @@ class LiveWire : JavaPlugin() {
 
                             // If not ignored, fire the load & reload events
                             if (!ignored) {
-                                var result = PluginLoadEvent(name).callEvent()
+                                val event = PluginLoadEvent.Pre(name, true)
+                                var result = event.callEvent()
                                 plugin?.let { result = result && PluginReloadEvent(name).callEvent() }
 
                                 // If either event was cancelled, delete the copied plugin jar.
@@ -149,13 +150,16 @@ class LiveWire : JavaPlugin() {
                                 }
 
                                 // Load the plugin
-                                enablePlugin(output?.toFile()?.absolutePath ?: return@Runnable)
+                                val plugin = enablePlugin(output?.toFile()?.absolutePath ?: return@Runnable, event.notify)
 
                                 // Refresh plugin references
                                 findAllPlugins()
 
                                 // Also reload plugins that depend on THIS plugin.
                                 reloadIfDependsOn(name)
+
+                                // Fire the post load event
+                                PluginLoadEvent.Post(plugin).callEvent()
                             }
                         })
                     }

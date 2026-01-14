@@ -3,13 +3,27 @@ package com.teddeh.api
 import org.bukkit.event.Cancellable
 import org.bukkit.event.Event
 import org.bukkit.event.HandlerList
+import org.bukkit.plugin.Plugin
 
 /**
  * This event is fired when a plugin is loaded onto server.
  */
-class PluginLoadEvent(
-    val plugin: String
-) : Event(), Cancellable {
+sealed class PluginLoadEvent : Event(), Cancellable {
+
+    /**
+     * This event is fired before a plugin is loaded onto server.
+     */
+    class Pre (
+        val plugin: String,
+        val notify: Boolean
+    ) : PluginLoadEvent()
+
+    /**
+     * This event is fired after a plugin has been loaded onto server.
+     */
+    class Post (
+        val plugin: Plugin
+    ) : PluginLoadEvent()
 
     companion object {
         private val handlers: HandlerList = HandlerList()
