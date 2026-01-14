@@ -1,9 +1,9 @@
 package com.teddeh.api
 
+import com.teddeh.Plugin
 import org.bukkit.event.Cancellable
 import org.bukkit.event.Event
 import org.bukkit.event.HandlerList
-import org.bukkit.plugin.Plugin
 
 /**
  * This event is fired when a plugin is loaded onto server.
