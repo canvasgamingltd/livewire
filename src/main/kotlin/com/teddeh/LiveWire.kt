@@ -150,7 +150,7 @@ class LiveWire : JavaPlugin() {
                                 }
 
                                 // Load the plugin
-                                val plugin = enablePlugin(output?.toFile()?.absolutePath ?: return@Runnable, event.notify)
+                                enablePlugin(output?.toFile()?.absolutePath ?: return@Runnable, event.notify)
 
                                 // Refresh plugin references
                                 findAllPlugins()
@@ -159,7 +159,9 @@ class LiveWire : JavaPlugin() {
                                 reloadIfDependsOn(name)
 
                                 // Fire the post load event
-                                PluginLoadEvent.Post(plugin).callEvent()
+                                PLUGINS.find { it.name.equals(name, true) }?.let {
+                                    PluginLoadEvent.Post(it).callEvent()
+                                }
                             }
                         })
                     }
