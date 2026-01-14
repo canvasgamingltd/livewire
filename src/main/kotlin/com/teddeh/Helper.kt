@@ -15,13 +15,12 @@ import java.util.*
 import java.util.jar.JarFile
 
 @Suppress("UnstableApiUsage")
-fun enablePlugin(path: String, notify: Boolean = true): org.bukkit.plugin.Plugin {
+fun enablePlugin(path: String, notify: Boolean = true) {
     val plugin = Bukkit.getPluginManager().loadPlugin(File(path))
-
     if (plugin != null) {
         Bukkit.getPluginManager().enablePlugin(plugin)
 
-        if (!notify) return plugin
+        if (!notify) return
 
         val name = plugin.pluginMeta.name
         val ver = plugin.pluginMeta.version
@@ -29,8 +28,6 @@ fun enablePlugin(path: String, notify: Boolean = true): org.bukkit.plugin.Plugin
         val text = "<white>LiveWire » <gray><i>Hot swapping %s (%s)".format(name, ver).comp()
         Audience.audience(Bukkit.getOnlinePlayers()).sendMessage(text)
     }
-
-    return requireNotNull(plugin)
 }
 
 @Suppress("UnstableApiUsage")
